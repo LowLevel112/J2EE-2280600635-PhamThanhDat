@@ -1,0 +1,88 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Xác minh 2FA - Đăng nhập</title>
+    <th:block th:replace="~{layout::link-css}"></th:block>
+    <style>
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+      .login-container {
+        width: 100%;
+        max-width: 400px;
+        padding: 15px;
+      }
+      .card {
+        border-radius: 10px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      }
+      .card-header {
+        border-radius: 10px 10px 0 0;
+      }
+    </style>
+  </head>
+  <body class="bg-light">
+    <div class="login-container">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0 text-center">
+            <i class="fas fa-shield-alt"></i> Xác minh Hai Yếu Tố
+          </h5>
+        </div>
+        <div class="card-body">
+          <div th:if="${error}" class="alert alert-danger" role="alert">
+            <strong>Lỗi!</strong> <span th:text="${error}"></span>
+          </div>
+
+          <p class="text-center text-muted mb-4">
+            Nhập mã OTP được tạo bởi ứng dụng xác thực của bạn
+          </p>
+
+          <form th:action="@{/2fa/verify}" method="post">
+            <div class="form-group mb-3">
+              <label for="code" class="form-label"
+                ><i class="fas fa-key"></i> Mã OTP (6 chữ số)</label
+              >
+              <input
+                type="number"
+                id="code"
+                name="code"
+                class="form-control form-control-lg text-center"
+                placeholder="000000"
+                min="0"
+                max="999999"
+                required
+                autofocus
+                style="
+                  letter-spacing: 10px;
+                  font-size: 1.5rem;
+                  font-weight: bold;
+                "
+              />
+            </div>
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-check"></i> Xác minh
+              </button>
+            </div>
+          </form>
+
+          <hr />
+          <p class="text-center small">
+            Không có quyền truy cập vào ứng dụng của bạn?
+            <a href="/login" class="text-primary">Quay lại đăng nhập</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <th:block th:replace="~{layout::footer}"></th:block>
+  </body>
+</html>

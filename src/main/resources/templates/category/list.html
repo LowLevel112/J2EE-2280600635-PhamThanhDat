@@ -1,0 +1,108 @@
+<!doctype html>
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+  lang="en"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Danh mục sách</title>
+    <th:block th:replace="~{layout::link-css}"></th:block>
+    <th:block th:replace="~{layout::custom-css}"></th:block>
+  </head>
+
+  <body>
+    <th:block th:replace="~{layout::header}"></th:block>
+    <div class="container mt-4">
+      <div class="row mb-4 align-items-center">
+        <div class="col-md-8">
+          <h1 class="mb-0">
+            <i class="fas fa-list me-2"></i>Danh sách danh mục sách
+          </h1>
+        </div>
+        <div class="col-md-4 text-end">
+          <a
+            class="btn btn-success btn-lg"
+            sec:authorize="hasRole('ADMIN')"
+            th:href="@{/categories/add}"
+          >
+            <i class="fas fa-plus me-2"></i>Thêm danh mục
+          </a>
+        </div>
+      </div>
+
+      <!-- Hiển thị thông báo lỗi nếu có -->
+      <div
+        th:if="${error}"
+        class="alert alert-danger alert-dismissible fade show"
+        role="alert"
+      >
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <span th:text="${error}"></span>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <!-- Bảng danh sách danh mục -->
+      <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th style="width: 10%">ID</th>
+              <th style="width: 50%">Tên danh mục</th>
+              <th style="width: 20%">Số sách</th>
+              <th style="width: 20%" class="text-center">Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:if="${categories.isEmpty()}">
+              <td colspan="4" class="text-center py-5">
+                <i class="fas fa-inbox text-muted me-2"></i>
+                <span class="text-muted">Chưa có danh mục nào</span>
+              </td>
+            </tr>
+            <tr th:each="category : ${categories}">
+              <td th:text="${category.getId()}"></td>
+              <td>
+                <strong th:text="${category.getName()}"></strong>
+              </td>
+              <td>
+                <span
+                  class="badge bg-info"
+                  th:text="${category.getBooks().size()}"
+                ></span>
+              </td>
+              <td class="text-center">
+                <a
+                  class="btn btn-sm btn-primary"
+                  sec:authorize="hasAnyAuthority('ADMIN')"
+                  th:href="@{/categories/edit/{id}(id=${category.getId()})}"
+                >
+                  <i class="fas fa-edit"></i> Sửa
+                </a>
+                <a
+                  class="btn btn-sm btn-danger"
+                  sec:authorize="hasAnyAuthority('ADMIN')"
+                  th:href="@{/categories/delete/{id}(id=${category.getId()})}"
+                  onclick="
+                    return confirm('Bạn có chắc chắn muốn xóa danh mục này?');
+                  "
+                >
+                  <i class="fas fa-trash"></i> Xóa
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <th:block th:replace="~{layout::footer}"></th:block>
+    <th:block th:replace="~{layout::script}"></th:block>
+  </body>
+</html>
